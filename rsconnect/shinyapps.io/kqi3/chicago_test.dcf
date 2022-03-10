@@ -1,0 +1,13 @@
+name: chicago_test
+title: chicago_test
+username:
+account: kqi3
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 5761230
+bundleId: 5631365
+url: https://kqi3.shinyapps.io/chicago_test/
+when: 1646190384.05237
+lastSyncTime: 1646190384.0524
+asMultiple: FALSE
+asStatic: FALSE

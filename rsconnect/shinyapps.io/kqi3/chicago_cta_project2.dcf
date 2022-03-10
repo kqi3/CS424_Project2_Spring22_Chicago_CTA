@@ -1,0 +1,14 @@
+name: chicago_cta_project2
+title: chicago_cta_project2
+username:
+account: kqi3
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 5761281
+bundleId: 5668531
+url: https://kqi3.shinyapps.io/chicago_cta_project2/
+when: 1646949855.02207
+lastSyncTime: 1646949855.02208
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: .RData
