@@ -14,6 +14,6 @@ This project showed the statistic entries of Chicago CTA stations from 2001 to 2
 <h3>How to Use</h3>
 <p> Download orignal chicago cta entries data at first.Reading in the main file and breaking it into chunks of 4.8 MB, Only run this code once below:</p>
   <p>  <b>my_file <- read.csv("CTA_-_Ridership_-__L__Station_Entries_-_Daily_Totals.csv")</b> </p>
-    <p>    <b>grps <- (split(my_file, (seq(nrow(my_file))-1) %/% 95000))</b> /p>
+    <p>    <b>grps <- (split(my_file, (seq(nrow(my_file))-1) %/% 95000))</b> </p>
         <p>   <b>for (i in seq_along(grps)) { </b> </p>
          <p>  <b>write.csv(grps[[i]], paste0("CTA_Data", i, ".csv")) }</b></p>
