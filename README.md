@@ -6,4 +6,4 @@ This project showed the statistic entries of Chicago CTA stations from 2001 to 2
 <h3>Rstudio 4.1.2</h3>
 <p>This project used Rstudio IDE version 4.1.2, but you can download the latest version of Rstudio for your OS: https://www.rstudio.com/products/rstudio/download/ Install the following packages: ggplot2,lubridate,DT,shiny,shinnydashborad,scales,DT,dplyr,plyr,reshape2,tidyverse,tidyr,leaflet. You can do this by calling library(packagename), or using RStudio's UI by navigating to "Packages", searching for them, and then installing them.</p>
 <h3>Data Download</h3>
-
+<p>Data of all Chicago CTA Ridership-L-Stations Entries  https://data.cityofchicago.org/Transportation/CTA-Ridership-L-Station-Entries-Daily-Totals/5neh-572f</p>
