@@ -11,4 +11,10 @@ This project showed the statistic entries of Chicago CTA stations from 2001 to 2
 <p>The Chicago Data Portal also has a file on CTA L stations including their latitude and longitude:
     https://data.cityofchicago.org/Transportation/CTA-System-Information-List-of-L-Stops/8pix-ypme </p>
 <p>as a 48KB file called CTA_-_System_Information_-_List_of__L__Stops.csv</p>
-
+<h3>How to Use</h3>
+<p># Reading in the main file and breaking it into chunks of 4.8 MB, Only run this code once below:
+#my_file <- read.csv("CTA_-_Ridership_-__L__Station_Entries_-_Daily_Totals.csv")
+#grps <- (split(my_file, (seq(nrow(my_file))-1) %/% 95000))
+#for (i in seq_along(grps)) {
+#write.csv(grps[[i]], paste0("CTA_Data", i, ".csv"))
+#}</p>
