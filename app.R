@@ -28,7 +28,7 @@ library(leaflet)
 #for (i in seq_along(grps)) {
 #write.csv(grps[[i]], paste0("CTA_Data", i, ".csv"))
 #}
-
+#Delete original big CTA entries csv file in your folder after you got small csv files.
 
 temp = list.files(pattern="*.csv")
 data_joined2 <- lapply(temp, read.csv)
@@ -495,6 +495,10 @@ server <- function(input, output,session) {
     #print(day2_data$rides)
     daydiff_rides= day2_data$rides - day1_data$rides
     twoday_data$ride_diff <- daydiff_rides
+    twoday_data <- mutate(twoday_data,color = case_when(
+      daydiff_rides>=0 ~ "Blue",
+      daydiff_rides<0 ~ "Red"
+    ))
     if(twoday_data$ride_diff==0){
       output$total_stations_table <- renderDataTable({
         justOneDayAll <- justOneDayAllReactive()
@@ -520,6 +524,24 @@ server <- function(input, output,session) {
     #update bar chart on top left for different entries by two days
     output$totalbystations <- renderPlot({
       oneday_data<-subset(data_joined,data_joined$newDate==input$Date)
+      day1_data <- subset(data_joined,newDate==input$Date)
+      #print(day1_data$rides)
+      day1_data[is.na(day1_data)]=0
+      day2_data <- subset(data_joined,newDate==input$Date2)
+      day2_data[is.na(day2_data)]=0
+      daydiff_rides <- day2_data$rides - day1_data$rides
+      twoday_data$stationname<- day1_data$stationname
+      twoday_data$ride_diff<-daydiff_rides
+      twoday_data$lng <-day1_data$lng
+      twoday_data$lat <-day1_data$lat
+      twoday_data<-data.frame(twoday_data)
+      #print(day2_data$rides)
+      daydiff_rides= day2_data$rides - day1_data$rides
+      twoday_data$ride_diff <- daydiff_rides
+      twoday_data <- mutate(twoday_data,color = case_when(
+        daydiff_rides>=0 ~ "Blue",
+        daydiff_rides<0 ~ "Red"
+      ))
       if(daydiff_rides==0){
         if(input$Barorder=="Alphabetical"){
           ggplot(oneday_data, aes(x=oneday_data$stationname, y=oneday_data$rides)) + geom_bar(fill="steelblue",stat = 'identity',width=0.7)+labs(title="The total entries in one day for all stations ", 
@@ -536,13 +558,13 @@ server <- function(input, output,session) {
       else{
         if(input$Barorder=="Alphabetical"){
           #justOneDayAll$stationname <- factor(justOneDayAll$stationname, levels=stationSeq)
-          ggplot(data.frame(twoday_data), aes(x=twoday_data$stationname, y=twoday_data$ride_diff)) + geom_bar(fill="steelblue",stat = 'identity',width=0.7)+labs(title="The total different entries between two day for all stations ", 
-                                                                                                                                                                 x="All L stations", y = "The total different entries  unit: person")+theme(plot.title = element_text(hjust=0.5, face="bold"),axis.text.x=element_text(angle=45,hjust=1,vjust=1))+scale_y_continuous(labels=label_comma())
+          ggplot(data.frame(twoday_data), aes(x=twoday_data$stationname, y=twoday_data$ride_diff)) +geom_bar(fill=factor(twoday_data$color),stat = 'identity',width=0.7)+scale_fill_brewer(palette="Set2")+labs(title="The total different entries between two day for all stations ", 
+           x="All L stations", y = "The total different entries  unit: person")+theme(plot.title = element_text(hjust=0.5, face="bold"),axis.text.x=element_text(angle=45,hjust=1,vjust=1))+scale_y_continuous(labels=label_comma())
         }
         else{
           twoday_data$stationname<- factor(twoday_data$stationname, levels=twoday_data$stationname[order(twoday_data$ride_diff)])
-          ggplot(data.frame(twoday_data), aes(x=twoday_data$stationname, y=twoday_data$ride_diff)) + geom_bar(fill="steelblue",stat = 'identity',width=0.7)+labs(title="The total different entries between two day for all stations ", 
-                                                                                                                                                                 x="All L stations", y = "The total entries  unit: person")+theme(plot.title = element_text(hjust=0.5, face="bold"),axis.text.x=element_text(angle=45,hjust=1,vjust=1))+scale_y_continuous(labels=label_comma())
+          ggplot(data.frame(twoday_data), aes(x=twoday_data$stationname, y=twoday_data$ride_diff)) + geom_bar(fill=factor(twoday_data$color),stat = 'identity',width=0.7)+scale_fill_brewer(palette="Set2")+labs(title="The total different entries between two day for all stations ", 
+         x="All L stations", y = "The total entries  unit: person")+theme(plot.title = element_text(hjust=0.5, face="bold"),axis.text.x=element_text(angle=45,hjust=1,vjust=1))+scale_y_continuous(labels=label_comma())
         }
       } 
       
