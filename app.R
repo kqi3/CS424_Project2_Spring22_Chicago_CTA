@@ -93,7 +93,7 @@ data_joined2<-NULL
 
 
 weekdaySequence<-c("Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday")
-monthSequence <- c("Jan","Feb","Mar","Apr","May","Jun","July","Aug","Sept","Oct","Nov","Dec")
+monthSequence <- c("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec")
 # convert the date codes to more memorable date names
 barorderSeq<- c("Alphabetical","MintoMax")
 
@@ -215,8 +215,8 @@ ui <- dashboardPage(
       
       
       tabItem(tabName = "about",
-              h2("About Me"),
-              p("This project was made by Kai Qi for CS 424 Spring 2022"),
+              h2("About Group"),
+              p("This project was made by Kai Qi and Haoxuan Zeng for CS 424 Spring 2022"),
               p("Original data available from https://data.cityofchicago.org/Transportation/CTA-Ridership-L-Station-Entries-Daily-Totals/5neh-572f"),
               p("The Chicago Data Portal also has a file on CTA L stations including their latitude and longitude:
                 https://data.cityofchicago.org/Transportation/CTA-System-Information-List-of-L-Stops/8pix-ypme
@@ -307,8 +307,8 @@ server <- function(input, output,session) {
   })
   output$totalbymonth <- renderPlot({
     justOneYear <- justOneYearReactive()
-    #justOneYear$month<- factor(justOneYear$month,levels=monthSequence)
-    ggplot(justOneYear,  aes(x=fct_inorder(justOneYear$month), y=justOneYear$rides)) + geom_col(fill="steelblue")+labs(title="The total entry  each month in a year", 
+    justOneYear$month<- factor(justOneYear$month,levels=monthSequence)
+    ggplot(justOneYear,  aes(fill=justOneYear$month,x=justOneYear$month, y=justOneYear$rides)) + geom_col(fill="steelblue")+labs(title="The total entry  each month in a year", 
                                                                                                                        x="Month from January to December", y = "The total entries  unit: person")+scale_fill_hue(breaks=monthSequence)+theme(plot.title = element_text(hjust=0.5, face="bold"))+scale_y_continuous(labels=label_comma())
   })
   output$totalbyday_week <- renderPlot({
@@ -459,6 +459,7 @@ server <- function(input, output,session) {
       daydiff_rides>=0 ~ "Blue",
       daydiff_rides<0 ~ "Red"
     ))
+    day2<-NULL
     
     twodaydiff_map<-leafletProxy('leaf_cta')
     #print(daydiff_rides)
@@ -477,7 +478,8 @@ server <- function(input, output,session) {
     
   })
   
-  
+  day1_data<-NULL
+  day2<-NULL
   twoday_data<-NULL
   
   observeEvent(input$Date2,{
@@ -499,6 +501,9 @@ server <- function(input, output,session) {
       daydiff_rides>=0 ~ "Blue",
       daydiff_rides<0 ~ "Red"
     ))
+    day2_data<NULL
+    daydiff_rides<-NULL
+    
     if(twoday_data$ride_diff==0){
       output$total_stations_table <- renderDataTable({
         justOneDayAll <- justOneDayAllReactive()
@@ -521,6 +526,8 @@ server <- function(input, output,session) {
       },rownames=FALSE,options=list(lengthMenu = list(c(5, 10), c('5', '10')), list(searching = FALSE),autoWidth=TRUE, order=list(1, 'asc')))
     }
     
+    
+    
     #update bar chart on top left for different entries by two days
     output$totalbystations <- renderPlot({
       oneday_data<-subset(data_joined,data_joined$newDate==input$Date)
@@ -538,6 +545,9 @@ server <- function(input, output,session) {
       #print(day2_data$rides)
       daydiff_rides= day2_data$rides - day1_data$rides
       twoday_data$ride_diff <- daydiff_rides
+      day1<-NULL
+      day2<-NULL
+      
       twoday_data <- mutate(twoday_data,color = case_when(
         daydiff_rides>=0 ~ "Blue",
         daydiff_rides<0 ~ "Red"
